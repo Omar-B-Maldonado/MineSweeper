@@ -40,13 +40,11 @@ public class GUI extends JFrame
 		
 		int numRows;
 		int numCols;
+		int numBombs;
 		
-		String revealed   = "<html>&nbsp;</html>"; //whitespace does not get replaced by ...
-												  //&nbsp; is the HTML entity for a non-breaking space.
-		String unrevealed    = "";
-		
-		private final int CELL_PADDING_H = -16;
-		private final int CELL_PADDING_V = -12;
+		String revealed   = "<html></html>"; //whitespace does not get replaced by elipses
+
+		String unrevealed = "";
 		
 		private final int IMAGE_SIZE = 25;
 		
@@ -56,8 +54,12 @@ public class GUI extends JFrame
 		private final String WIN_TITLE   = "WOWZERS";
 		private final String WIN_MESSAGE = "You won!";
 		
-		private final String PLAY_AGAIN_TITLE = "You got this!";
-		private final String PLAY_AGAIN_MESSAGE = "Try again?";
+		private final String PLAY_AGAIN_TITLE = "Again, AGAIN!";
+		private final String PLAY_AGAIN_MESSAGE = "Play again?";
+		
+		private int revealedCount;
+		
+		private boolean newGame = false;
 
 		ImageIcon unpressed  = new ImageIcon("Images/button_new.png" );
 		ImageIcon bomb       = new ImageIcon("Images/button_bomb.png");
@@ -86,17 +88,22 @@ public class GUI extends JFrame
 		
 		public GameBoard()
 		{
-			grid    = new Grid(16, 16, 40);
+			initialize();
 			
-			numRows = grid.getNumRows();
-			
-			numCols = grid.getNumColumns();
-			
-			setLayout(new GridLayout(numRows, numCols, CELL_PADDING_H, CELL_PADDING_V));
-			
-			setBackground(Color.DARK_GRAY);
+			setLayout(new GridLayout(numRows, numCols));
 			
 			displayBoard();	
+		}
+		
+		public void initialize()
+		{
+			Grid grid = new Grid(16, 16, 40);
+			this.grid = grid;					  //make a new grid for the buttons
+			this.numRows = grid.getNumRows();
+			this.numCols = grid.getNumColumns();
+			this.numBombs = grid.getNumBombs();
+			revealedCount = 0;
+			newGame = true;
 		}
 		
 		public void displayBoard()
@@ -110,6 +117,7 @@ public class GUI extends JFrame
 					board[row][col] = new JButton();
 					
 					setNewButtonImage(board[row][col]);
+					markAsUnrevealed(board[row][col]);
 	
 					int i = row; //capture row as i
 					int j = col; //capture col as j
@@ -119,8 +127,8 @@ public class GUI extends JFrame
 		            board[row][col].putClientProperty("row", i); //store i as client property "row"
 		            board[row][col].putClientProperty("col", j); //store j as client property "col"
 					
+		            board[row][col].setBorder(BorderFactory.createEmptyBorder());//gets rid of button padding
 					board[row][col].setFocusPainted(false);
-					board[row][col].setBorderPainted(false);
 		             
 					this.add(board[row][col]);					 //add JButton to the GameBoard
 				}
@@ -133,6 +141,8 @@ public class GUI extends JFrame
 			int row   = (int) ((JButton) e.getSource()).getClientProperty("row");	
 			int col   = (int) ((JButton) e.getSource()).getClientProperty("col");
 			
+			newGame = false;
+			
 			handleButtonClick(row, col);
 			
 			repaint();
@@ -142,10 +152,8 @@ public class GUI extends JFrame
 	    {        
 	    	if (grid.isBombAtLocation(row, col) == true) 						//if a bomb button was clicked...
 	        {
-	    		revealGrid();													//reveal the rest of the grid           
-	            
-	    		displayGameOverPane();      
-	           
+	    		revealGrid();													//reveal the rest of the grid            
+	    		displayGameOverPane();           
 	    		promptReplay();
 	        } 
 	       
@@ -155,8 +163,13 @@ public class GUI extends JFrame
 	           
 	            if (count == 0) revealButtonsAdjacentTo(row, col);				//recursively reveal buttons if 0 bombs are nearby
 	            
-	            else            revealImageBasedOnCount(count, board[row][col]);
+	            if (count >  0) revealImageBasedOnCount(count, board[row][col]);
 	            	
+	            if (winConditionMet() == true) 
+            	{
+            		displayWinPane();
+   		         	promptReplay();
+            	}	
 	        }
 	    }
 		
@@ -166,12 +179,12 @@ public class GUI extends JFrame
 	        for (int row = 0; row < board.length; row++) 
 	        {
 	            for (int col = 0; col < board[row].length; col++) 
-	            {     	            	
+	            {     	            	 	
 	            	int count = grid.getCountAtLocation(row, col); 					   //get the grid button's adjacent bomb count
 	            	
 	            	if (grid.isBombAtLocation(row, col))	board[row][col].setIcon(bombScaled);//set its icon to bomb icon if its a bomb
 			        
-	            	else revealImageBasedOnCount(count, board[row][col]);
+	            	else revealImageBasedOnCount(count, board[row][col]); //we don't check for win condition in this case
 	            	
 	            }//inner for loop ends
 	        }//outer for loop ends
@@ -185,52 +198,77 @@ public class GUI extends JFrame
 					return;												//come back from recursion
 			    }
 	
-				if (isUnrevealed(board[row][col])) 			//if current button's text was not revealed
+				if ((isUnrevealed(board[row][col])) && (newGame == false))						//if current button's text was not revealed
 				{
 					int count = grid.getCountAtLocation(row, col);		//get the count
 					
-					if (count > 0)	revealImageBasedOnCount(count, board[row][col]);
+					if (count > 0) 
+					{
+						revealImageBasedOnCount(count, board[row][col]);
 						
+						if (winConditionMet()) 
+		            	{
+		            		displayWinPane();
+			            	
+		   		         	promptReplay();
+		            	}
+					}
 					
 					if (count == 0) 
 					{	
 						revealImageBasedOnCount(count, board[row][col]);
 						
-						//recursively reveal adjacent cells
-				        revealButtonsAdjacentTo(row - 1, col - 1);  //top left
-				        revealButtonsAdjacentTo(row - 1, col);		//top
-				        revealButtonsAdjacentTo(row - 1, col + 1);  //top right
-				           
-				        revealButtonsAdjacentTo(row, col - 1);		//left
-				        revealButtonsAdjacentTo(row, col + 1);		//right
-				            
-				        revealButtonsAdjacentTo(row + 1, col - 1);  //bottom left
-				        revealButtonsAdjacentTo(row + 1, col);		//bottom
-				        revealButtonsAdjacentTo(row + 1, col + 1);	//bottom right
-				        
+						if (winConditionMet()) 
+		            	{
+		            		displayWinPane();
+			            	
+		   		         	promptReplay();
+		            	}
+						
+						else 
+						{
+							//recursively reveal adjacent cells
+					        revealButtonsAdjacentTo(row - 1, col - 1);  //top left
+					        revealButtonsAdjacentTo(row - 1, col);		//top
+					        revealButtonsAdjacentTo(row - 1, col + 1);  //top right
+					           
+					        revealButtonsAdjacentTo(row, col - 1);		//left
+					        revealButtonsAdjacentTo(row, col + 1);		//right
+					            
+					        revealButtonsAdjacentTo(row + 1, col - 1);  //bottom left
+					        revealButtonsAdjacentTo(row + 1, col);		//bottom
+					        revealButtonsAdjacentTo(row + 1, col + 1);	//bottom right
+						}
 					}
-			        
 				}
 		}		
 		
 		public void resetGame() 
 		{ 
-			for(int row = 0; row < board.length; row++)
+			initialize();
+			
+			for(int row = 0; row < numRows; row++)
 			{
-				for(int col = 0; col < board[row].length; col++)
+				for(int col = 0; col < numCols; col++)
 				{ 		
 					setNewButtonImage(board[row][col]);
+					markAsUnrevealed(board[row][col]);
 				}
 			}
-			grid = new Grid(16, 16, 40);					  //make a new grid for the buttons
+			repaint();
 		}
 		
-		public void displayGameOverPane()
+		private boolean winConditionMet()
+		{
+			return (revealedCount == ((numRows * numCols) - numBombs));
+		}
+		
+		private void displayGameOverPane()
 		{
 			JOptionPane.showMessageDialog(null, GAME_OVER_MESSAGE, GAME_OVER_TITLE, JOptionPane.INFORMATION_MESSAGE);
 		}
 		
-		public void displayWinPane()
+		private void displayWinPane()
 		{
 			JOptionPane.showMessageDialog(null, WIN_MESSAGE, WIN_TITLE, JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -257,21 +295,16 @@ public class GUI extends JFrame
         	if (count == 8) button.setIcon(eightScaled );
         	
         	markAsRevealed(button);
+        	revealedCount++;
 		}
 		
-		private void setNewButtonImage(JButton button)	
-		{       
-			button.setIcon(unpressedScaled);  
-			
-			markAsUnrevealed(button);
-		}
+		private void setNewButtonImage(JButton button)	{       button.setIcon(unpressedScaled);    }
 		
 		private void markAsRevealed   (JButton button) 	{       button.setText(revealed);		    }
 		
 		private void markAsUnrevealed (JButton button)	{		button.setText(unrevealed);			}
 		
-		private boolean  isUnrevealed (JButton button)	{return button.getText().equals(unrevealed);}
-		
+		private boolean  isUnrevealed (JButton button)	{return button.getText().equals(unrevealed);}		
 		
 	}
 }
