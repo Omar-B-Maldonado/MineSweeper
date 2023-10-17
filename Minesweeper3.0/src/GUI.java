@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
@@ -22,18 +24,17 @@ public class GUI extends JFrame
 		panel.add(board, BorderLayout.CENTER);
 		
 		add(panel);
+		
 		pack();
 		setTitle("MineSweeper3.0");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
-		
-		
 	}
-	
+	//============================================= INNER CLASS SECTION BEGINS =====================================//
 	private class GameBoard extends    JPanel 
-							implements ActionListener 
+							implements ActionListener,MouseListener
 	{
 		private JButton[][] board;
 		private Grid grid;
@@ -42,12 +43,6 @@ public class GUI extends JFrame
 		int numCols;
 		int numBombs;
 		
-		String revealed   = "<html></html>"; //whitespace does not get replaced by elipses
-
-		String unrevealed = "";
-		
-		private final int IMAGE_SIZE = 25;
-		
 		private final String GAME_OVER_TITLE = "Oopsie!";
 		private final String GAME_OVER_MESSAGE = "You made an oopsie. It's okay though.";
 		
@@ -55,36 +50,40 @@ public class GUI extends JFrame
 		private final String WIN_MESSAGE = "You won!";
 		
 		private final String PLAY_AGAIN_TITLE = "Again, AGAIN!";
-		private final String PLAY_AGAIN_MESSAGE = "Play again?";
+		private final String PLAY_AGAIN_MESSAGE = "Play again?";	
 		
-		private int revealedCount;
+		private int          revealedCount;
+		private boolean      gameJustStarted;
 		
-		private boolean newGame = false;
+		private final int    IMAGE_SIZE = 25;
 
-		ImageIcon unpressed  = new ImageIcon("Images/button_new.png" );
-		ImageIcon bomb       = new ImageIcon("Images/button_bomb.png");
-		ImageIcon zero       = new ImageIcon("Images/button_0.png"   );
-		ImageIcon one        = new ImageIcon("Images/button_1.png"   );
-		ImageIcon two        = new ImageIcon("Images/button_2.png"   );
-		ImageIcon three      = new ImageIcon("Images/button_3.png"   );
-		ImageIcon four       = new ImageIcon("Images/button_4.png"   );
-		ImageIcon five       = new ImageIcon("Images/button_5.png"   );
-		ImageIcon six        = new ImageIcon("Images/button_6.png"   );
-		ImageIcon seven      = new ImageIcon("Images/button_7.png"   );
-		ImageIcon eight      = new ImageIcon("Images/button_8.png"   );
+		ImageIcon unpressed 	  = new ImageIcon("Images/button_new.png" );
+		ImageIcon bomb     		  = new ImageIcon("Images/button_bomb.png");
+		ImageIcon flag     		  = new ImageIcon("Images/flag.png"       );
+		ImageIcon zero    		  = new ImageIcon("Images/button_0.png"   );
+		ImageIcon one     		  = new ImageIcon("Images/button_1.png"   );
+		ImageIcon two     		  = new ImageIcon("Images/button_2.png"   );
+		ImageIcon three   		  = new ImageIcon("Images/button_3.png"   );
+		ImageIcon four     		  = new ImageIcon("Images/button_4.png"   );
+		ImageIcon five     	  	  = new ImageIcon("Images/button_5.png"   );
+		ImageIcon six       	  = new ImageIcon("Images/button_6.png"   );
+		ImageIcon seven     	  = new ImageIcon("Images/button_7.png"   );
+		ImageIcon eight     	  = new ImageIcon("Images/button_8.png"   );
 		
-		ImageIcon unpressedScaled  = new ImageIcon(unpressed.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon bombScaled       = new ImageIcon(bomb.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon zeroScaled       = new ImageIcon(zero.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon oneScaled        = new ImageIcon(one.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon twoScaled        = new ImageIcon(two.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon threeScaled      = new ImageIcon(three.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon fourScaled       = new ImageIcon(four.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon fiveScaled       = new ImageIcon(five.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon sixScaled        = new ImageIcon(six.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon sevenScaled      = new ImageIcon(seven.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon eightScaled      = new ImageIcon(eight.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon unpressedScaled = new ImageIcon(unpressed.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon bombScaled      = new ImageIcon(bomb.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon flagScaled      = new ImageIcon(flag.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon zeroScaled      = new ImageIcon(zero.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon oneScaled       = new ImageIcon(one.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon twoScaled       = new ImageIcon(two.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon threeScaled     = new ImageIcon(three.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon fourScaled      = new ImageIcon(four.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon fiveScaled      = new ImageIcon(five.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon sixScaled       = new ImageIcon(six.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon sevenScaled     = new ImageIcon(seven.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon eightScaled     = new ImageIcon(eight.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
 		
+		//------------------------------ INNER CLASS' METHODS ARE BELOW THIS LINE ---------------------------------------------------//
 		
 		public GameBoard()
 		{
@@ -97,13 +96,12 @@ public class GUI extends JFrame
 		
 		public void initialize()
 		{
-			Grid grid = new Grid(16, 16, 40);
-			this.grid = grid;					  //make a new grid for the buttons
-			this.numRows = grid.getNumRows();
-			this.numCols = grid.getNumColumns();
-			this.numBombs = grid.getNumBombs();
-			revealedCount = 0;
-			newGame = true;
+			grid            = new Grid(16, 16, 40);		 //make a new grid for the buttons
+			numRows         = grid.getNumRows();
+			numCols         = grid.getNumColumns();
+			numBombs        = grid.getNumBombs();
+			revealedCount   = 0;
+			gameJustStarted = true;
 		}
 		
 		public void displayBoard()
@@ -114,23 +112,22 @@ public class GUI extends JFrame
 			{
 				for(int col = 0; col < board[row].length; col ++)
 				{			
-					board[row][col] = new JButton();
+					JButton button = new JButton(); //make a new JButton
 					
-					setNewButtonImage(board[row][col]);
-					markAsUnrevealed(board[row][col]);
-	
-					int i = row; //capture row as i
-					int j = col; //capture col as j
+					board[row][col] = button;	    //make the spot on the board refer to that button
 					
-					//attach the common ActionListener to each button
-		            board[row][col].addActionListener(this::actionPerformed);
-		            board[row][col].putClientProperty("row", i); //store i as client property "row"
-		            board[row][col].putClientProperty("col", j); //store j as client property "col"
+					setNewButtonImage(button);
 					
-		            board[row][col].setBorder(BorderFactory.createEmptyBorder());//gets rid of button padding
-					board[row][col].setFocusPainted(false);
+					button.putClientProperty("row", row); //store the button's row as client property "row"
+		            button.putClientProperty("col", col); //store the button's col as client property "col"
+					
+					button.addMouseListener (this);
+					button.addActionListener(this);
+		            
+					button.setFocusPainted (false);
+		            button.setBorder(BorderFactory.createEmptyBorder()); //gets rid of button padding
 		             
-					this.add(board[row][col]);					 //add JButton to the GameBoard
+					this.add(button);					 //add the button to the GameBoard
 				}
 			}
 		}
@@ -138,10 +135,10 @@ public class GUI extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
-			int row   = (int) ((JButton) e.getSource()).getClientProperty("row");	
-			int col   = (int) ((JButton) e.getSource()).getClientProperty("col");
+			int row = (int) ((JButton) e.getSource()).getClientProperty("row");	
+			int col = (int) ((JButton) e.getSource()).getClientProperty("col");
 			
-			newGame = false;
+			gameJustStarted = false; //the game is no longer in a brand new state once you click a button
 			
 			handleButtonClick(row, col);
 			
@@ -150,41 +147,36 @@ public class GUI extends JFrame
 		
 		private void handleButtonClick(int row, int col) 
 	    {        
-	    	if (grid.isBombAtLocation(row, col) == true) 						//if a bomb button was clicked...
-	        {
-	    		revealGrid();													//reveal the rest of the grid            
-	    		displayGameOverPane();           
-	    		promptReplay();
-	        } 
+	    	if (gameOverConditionMet(row, col)) handleGameOver();
 	       
-	        else 																//if the button clicked was not a bomb...
+	        else 																				//if the button clicked was not a bomb...
 	        {
-	            int count  =    grid.getCountAtLocation(row, col);					//get the count of bombs nearby based on the gri     	
-	           
-	            if (count == 0) revealButtonsAdjacentTo(row, col);				//recursively reveal buttons if 0 bombs are nearby
+	            JButton button = board[row][col];
 	            
-	            if (count >  0) revealImageBasedOnCount(count, board[row][col]);
+	        	int count  =           	grid.getCountAtLocation(row, col);				//get the count of bombs nearby based on the gri     	
+	           
+	            if (count == 0)         revealButtonsAdjacentTo(row, col);				//recursively reveal buttons if 0 bombs are nearby
+	            
+	            if (count >  0)         revealImageBasedOnCount(count, button);
 	            	
-	            if (winConditionMet() == true) 
-            	{
-            		displayWinPane();
-   		         	promptReplay();
-            	}	
+	            if (winConditionMet())  handleWin();	
 	        }
 	    }
 		
 	    private void revealGrid() 
 	    {
-	    																				//go through entire grid
+	    																			//go through entire grid
 	        for (int row = 0; row < board.length; row++) 
 	        {
 	            for (int col = 0; col < board[row].length; col++) 
 	            {     	            	 	
-	            	int count = grid.getCountAtLocation(row, col); 					   //get the grid button's adjacent bomb count
+	            	JButton button = board[row][col];
 	            	
-	            	if (grid.isBombAtLocation(row, col))	board[row][col].setIcon(bombScaled);//set its icon to bomb icon if its a bomb
+	            	int count  = grid.getCountAtLocation(row, col); 				   //get the grid button's adjacent bomb count
+	            	
+	            	if          (grid.isBombAtLocation  (row, col)) button.setIcon(bombScaled);//set its icon to bomb icon if its a bomb
 			        
-	            	else revealImageBasedOnCount(count, board[row][col]); //we don't check for win condition in this case
+	            	else        revealImageBasedOnCount (count,     button); //we don't check for win condition in this case
 	            	
 	            }//inner for loop ends
 	        }//outer for loop ends
@@ -195,35 +187,27 @@ public class GUI extends JFrame
 				if ((row < 0 || row >= board.length) || 
 					(col < 0 || col >= board[0].length)) 				//if out of bounds..
 				{
-					return;												//come back from recursion
+					return;																					
 			    }
+				
+				JButton button = board[row][col];
 	
-				if ((isUnrevealed(board[row][col])) && (newGame == false))						//if current button's text was not revealed
+				if ((isUnrevealed(button)) && (!gameJustStarted))
 				{
 					int count = grid.getCountAtLocation(row, col);		//get the count
 					
 					if (count > 0) 
 					{
-						revealImageBasedOnCount(count, board[row][col]);
+						revealImageBasedOnCount(count, button);
 						
-						if (winConditionMet()) 
-		            	{
-		            		displayWinPane();
-			            	
-		   		         	promptReplay();
-		            	}
+						if (winConditionMet()) handleWin();
 					}
 					
 					if (count == 0) 
 					{	
-						revealImageBasedOnCount(count, board[row][col]);
+						revealImageBasedOnCount(count, button);
 						
-						if (winConditionMet()) 
-		            	{
-		            		displayWinPane();
-			            	
-		   		         	promptReplay();
-		            	}
+						if (winConditionMet()) handleWin();
 						
 						else 
 						{
@@ -252,15 +236,32 @@ public class GUI extends JFrame
 				for(int col = 0; col < numCols; col++)
 				{ 		
 					setNewButtonImage(board[row][col]);
-					markAsUnrevealed(board[row][col]);
 				}
 			}
 			repaint();
 		}
 		
+		private void handleGameOver()
+		{
+			revealGrid();													//reveal the rest of the grid            
+    		displayGameOverPane();           
+    		promptReplay();
+		}
+		
+		private void handleWin()
+		{
+			displayWinPane();	
+	        promptReplay();
+		}
+		
 		private boolean winConditionMet()
 		{
-			return (revealedCount == ((numRows * numCols) - numBombs));
+			return revealedCount == ((numRows * numCols) - numBombs);
+		}
+		
+		private boolean gameOverConditionMet(int row, int col)
+		{
+			return grid.isBombAtLocation(row, col);
 		}
 		
 		private void displayGameOverPane()
@@ -275,7 +276,7 @@ public class GUI extends JFrame
 		
 		private void promptReplay() 
 		{
-			int decision = JOptionPane.showConfirmDialog(null, PLAY_AGAIN_MESSAGE, PLAY_AGAIN_TITLE, JOptionPane.YES_NO_OPTION);
+			int decision =  JOptionPane.showConfirmDialog(null, PLAY_AGAIN_MESSAGE, PLAY_AGAIN_TITLE, JOptionPane.YES_NO_OPTION);
 			
 			if (decision == JOptionPane.YES_OPTION) resetGame();
 			
@@ -294,17 +295,31 @@ public class GUI extends JFrame
         	if (count == 7) button.setIcon(sevenScaled );
         	if (count == 8) button.setIcon(eightScaled );
         	
-        	markAsRevealed(button);
         	revealedCount++;
 		}
 		
-		private void setNewButtonImage(JButton button)	{       button.setIcon(unpressedScaled);    }
+		private void setNewButtonImage(JButton button)	{       button.setIcon     (unpressedScaled);}	
+	
+		private boolean isUnrevealed  (JButton button)	{return button.getIcon() == unpressedScaled; }
 		
-		private void markAsRevealed   (JButton button) 	{       button.setText(revealed);		    }
-		
-		private void markAsUnrevealed (JButton button)	{		button.setText(unrevealed);			}
-		
-		private boolean  isUnrevealed (JButton button)	{return button.getText().equals(unrevealed);}		
-		
+		private boolean isFlagged     (JButton button)  {return button.getIcon() == flagScaled;      }
+
+		@Override
+		public void mouseClicked      (MouseEvent e  ) 
+		{	
+			JButton button = (JButton) e.getSource();
+			
+			if (SwingUtilities.isRightMouseButton(e)) 
+			{
+				if      (isFlagged   (button)) setNewButtonImage(button) ;
+				
+				else if (isUnrevealed(button)) button.setIcon(flagScaled);
+			}
+		}
+		public void mousePressed  (MouseEvent e) {}
+		public void mouseReleased (MouseEvent e) {}
+		public void mouseEntered  (MouseEvent e) {}
+		public void mouseExited   (MouseEvent e) {}		
 	}
+	//====================================================== INNER CLASS SECTION ENDS ====================================================//
 }
