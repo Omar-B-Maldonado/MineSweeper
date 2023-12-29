@@ -1,6 +1,3 @@
-
-//============================================= INNER CLASS SECTION BEGINS =====================================//
-
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -15,8 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class BoardPanel      extends    JPanel 
-					   implements ActionListener,MouseListener
+public class BoardPanel extends    JPanel 
+					    implements ActionListener, MouseListener
 	{
 		private JButton[][] board;
 		private Grid grid;
@@ -232,6 +229,7 @@ public class BoardPanel      extends    JPanel
 		
 		private void handleWin()
 		{
+			revealGrid();
 			displayWinPane();	
 	        promptReplay();
 		}
@@ -298,10 +296,11 @@ public class BoardPanel      extends    JPanel
 				else if (isUnrevealed(button)) button.setIcon(flagScaled);
 			}
 		}
+		
+		//unused methods from MouseListener implementation
 		public void mousePressed  (MouseEvent e) {}
 		public void mouseReleased (MouseEvent e) {}
 		public void mouseEntered  (MouseEvent e) {}
-		public void mouseExited   (MouseEvent e) {}	
-		
+		public void mouseExited   (MouseEvent e) {}		
 	}
 	
