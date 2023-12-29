@@ -3,7 +3,7 @@ import java.util.Random;
 public class Grid 
 {
 	private boolean[][]  bombGrid;
-	private int[][] 	countGrid;
+	private int	   [][] countGrid;
 	
 	private int    numRows;
 	private int numColumns;
