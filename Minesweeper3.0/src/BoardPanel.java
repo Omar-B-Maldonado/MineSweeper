@@ -16,7 +16,7 @@ public class BoardPanel extends    JPanel
 					    implements ActionListener, MouseListener
 	{
 		private JButton[][] board;
-		private Grid grid;
+		private Grid 		 grid;
 		
 		int numRows;
 		int numCols;
@@ -31,45 +31,43 @@ public class BoardPanel extends    JPanel
 		private final String PLAY_AGAIN_TITLE   = "Again, AGAIN!";
 		private final String PLAY_AGAIN_MESSAGE = "Play again?";	
 		
-		private int          revealedCount;
+		private int            revealedCount;
 		private boolean      gameJustStarted;
 		
-		private final int    IMAGE_SIZE = 25;
+		private final int    IMAGE_SIZE = 28;
 
-		ImageIcon unpressed 	  = new ImageIcon("Images/button_new.png" );
-		ImageIcon bomb            = new ImageIcon("Images/button_bomb.png");
-		ImageIcon flag            = new ImageIcon("Images/flag.png"       );
-		ImageIcon zero            = new ImageIcon("Images/button_0.png"   );
-		ImageIcon one             = new ImageIcon("Images/button_1.png"   );
-		ImageIcon two             = new ImageIcon("Images/button_2.png"   );
-		ImageIcon three           = new ImageIcon("Images/button_3.png"   );
-		ImageIcon four            = new ImageIcon("Images/button_4.png"   );
-		ImageIcon five            = new ImageIcon("Images/button_5.png"   );
-		ImageIcon six             = new ImageIcon("Images/button_6.png"   );
-		ImageIcon seven           = new ImageIcon("Images/button_7.png"   );
-		ImageIcon eight           = new ImageIcon("Images/button_8.png"   );
+		ImageIcon unpressed = new ImageIcon("Images/button_new.png" );
+		ImageIcon bomb      = new ImageIcon("Images/button_bomb.png");
+		ImageIcon flag      = new ImageIcon("Images/flag.png"       );
+		ImageIcon _0        = new ImageIcon("Images/button_0.png"   );
+		ImageIcon _1        = new ImageIcon("Images/button_1.png"   );
+		ImageIcon _2        = new ImageIcon("Images/button_2.png"   );
+		ImageIcon _3       	= new ImageIcon("Images/button_3.png"   );
+		ImageIcon _4        = new ImageIcon("Images/button_4.png"   );
+		ImageIcon _5        = new ImageIcon("Images/button_5.png"   );
+		ImageIcon _6        = new ImageIcon("Images/button_6.png"   );
+		ImageIcon _7        = new ImageIcon("Images/button_7.png"   );
+		ImageIcon _8        = new ImageIcon("Images/button_8.png"   );
 		
 		ImageIcon unpressedScaled = new ImageIcon(unpressed.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon bombScaled      = new ImageIcon(bomb.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon flagScaled      = new ImageIcon(flag.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon zeroScaled      = new ImageIcon(zero.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon oneScaled       = new ImageIcon(one.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon twoScaled       = new ImageIcon(two.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon threeScaled     = new ImageIcon(three.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon fourScaled      = new ImageIcon(four.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon fiveScaled      = new ImageIcon(five.getImage().getScaledInstance     (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon sixScaled       = new ImageIcon(six.getImage().getScaledInstance      (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon sevenScaled     = new ImageIcon(seven.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
-		ImageIcon eightScaled     = new ImageIcon(eight.getImage().getScaledInstance    (IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon bombScaled      = new ImageIcon(     bomb.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon flagScaled      = new ImageIcon(     flag.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _0Scaled        = new ImageIcon(       _0.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _1Scaled        = new ImageIcon(       _1.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _2Scaled        = new ImageIcon(       _2.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _3Scaled        = new ImageIcon(       _3.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _4Scaled        = new ImageIcon(       _4.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _5Scaled        = new ImageIcon(       _5.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _6Scaled        = new ImageIcon(       _6.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _7Scaled        = new ImageIcon(       _7.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
+		ImageIcon _8Scaled        = new ImageIcon(       _8.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
 		
 		//------------------------------ INNER CLASS' METHODS ARE BELOW THIS LINE ---------------------------------------------------//
 		
 		public BoardPanel()
 		{
-			initialize();
-			
-			setLayout(new GridLayout(numRows, numCols));
-			
+			initialize();	
+			setLayout(new GridLayout(numRows, numCols));	
 			createBoard();	
 		}
 		
@@ -106,7 +104,7 @@ public class BoardPanel extends    JPanel
 					button.setFocusPainted (false);
 		            button.setBorder(BorderFactory.createEmptyBorder()); //gets rid of button padding
 		             
-					this.add(button);					 //add the button to the GameBoard
+					this.add(button);					 //add the button to the board panel
 				}
 			}
 		}
@@ -120,25 +118,24 @@ public class BoardPanel extends    JPanel
 			gameJustStarted = false; //the game is no longer in a brand new state once you click a button
 			
 			handleButtonClick(row, col);
-			
 			repaint();
 		}
 		
 		private void handleButtonClick(int row, int col) 
 	    {        
-	    	if (gameOverConditionMet(row, col)) handleGameOver();
+	    	if (bombClickedAt(row, col)) handleGameOver();
 	       
 	        else 																				//if the button clicked was not a bomb...
 	        {
-	            JButton button = board[row][col];
+	            JButton clickedButton = board[row][col];
 	            
 	        	int count  =           	grid.getCountAtLocation(row, col);				//get the count of bombs nearby based on the gri     	
 	           
 	            if (count == 0)         revealButtonsAdjacentTo(row, col);				//recursively reveal buttons if 0 bombs are nearby
 	            
-	            if (count >  0)         revealImageBasedOnCount(count, button);
+	            if (count  > 0)         revealImageBasedOnCount(count, clickedButton);
 	            	
-	            if (winConditionMet())  handleWin();	
+	            if (allSafeSpotsRevealed()) handleWin();	
 	        }
 	    }
 		
@@ -163,11 +160,7 @@ public class BoardPanel extends    JPanel
 
 		private void revealButtonsAdjacentTo(int row, int col)
 		{
-				if ((row < 0 || row >= board.length) || 
-					(col < 0 || col >= board[0].length)) 				//if out of bounds..
-				{
-					return;																					
-			    }
+				if (outOfBoundsAt(row, col)) {return;}
 				
 				JButton button = board[row][col];
 	
@@ -178,15 +171,13 @@ public class BoardPanel extends    JPanel
 					if (count > 0) 
 					{
 						revealImageBasedOnCount(count, button);
-						
-						if (winConditionMet()) handleWin();
+						if (allSafeSpotsRevealed()) handleWin();
 					}
 					
 					if (count == 0) 
 					{	
 						revealImageBasedOnCount(count, button);
-						
-						if (winConditionMet()) handleWin();
+						if (allSafeSpotsRevealed()) handleWin();
 						
 						else 
 						{
@@ -212,10 +203,7 @@ public class BoardPanel extends    JPanel
 			
 			for(int row = 0; row < numRows; row++)
 			{
-				for(int col = 0; col < numCols; col++)
-				{ 		
-					setNewButtonImage(board[row][col]);
-				}
+				for(int col = 0; col < numCols; col++) setNewButtonImage(board[row][col]);
 			}
 			repaint();
 		}
@@ -234,12 +222,17 @@ public class BoardPanel extends    JPanel
 	        promptReplay();
 		}
 		
-		private boolean winConditionMet()
+		private boolean outOfBoundsAt(int row, int col)
+		{
+			return (row < 0 || row >= board.length) || (col < 0 || col >= board[0].length);
+		}
+		
+		private boolean allSafeSpotsRevealed()
 		{
 			return revealedCount == ((numRows * numCols) - numBombs);
 		}
 		
-		private boolean gameOverConditionMet(int row, int col)
+		private boolean bombClickedAt(int row, int col)
 		{
 			return grid.isBombAtLocation(row, col);
 		}
@@ -265,34 +258,30 @@ public class BoardPanel extends    JPanel
 		
 		private void revealImageBasedOnCount(int count, JButton button)
 		{
-			if (count == 0) button.setIcon(zeroScaled  );
-			if (count == 1) button.setIcon(oneScaled   );
-        	if (count == 2) button.setIcon(twoScaled   );
-        	if (count == 3) button.setIcon(threeScaled );
-        	if (count == 4) button.setIcon(fourScaled  );
-        	if (count == 5) button.setIcon(fiveScaled  );
-        	if (count == 6) button.setIcon(sixScaled   );
-        	if (count == 7) button.setIcon(sevenScaled );
-        	if (count == 8) button.setIcon(eightScaled );
+			if (count == 0) button.setIcon(_0Scaled);
+			if (count == 1) button.setIcon(_1Scaled);
+        	if (count == 2) button.setIcon(_2Scaled);
+        	if (count == 3) button.setIcon(_3Scaled);
+        	if (count == 4) button.setIcon(_4Scaled);
+        	if (count == 5) button.setIcon(_5Scaled);
+        	if (count == 6) button.setIcon(_6Scaled);
+        	if (count == 7) button.setIcon(_7Scaled);
+        	if (count == 8) button.setIcon(_8Scaled);
         	
         	revealedCount++;
 		}
 		
 		private void setNewButtonImage(JButton button)	{       button.setIcon     (unpressedScaled);}	
-	
 		private boolean isUnrevealed  (JButton button)	{return button.getIcon() == unpressedScaled; }
-		
 		private boolean isFlagged     (JButton button)  {return button.getIcon() == flagScaled;      }
-
-		@Override
-		public void mouseClicked      (MouseEvent e  ) 
+		@Override 
+		public void mouseClicked 	  (MouseEvent   e) 
 		{	
 			JButton button = (JButton) e.getSource();
 			
 			if (SwingUtilities.isRightMouseButton(e)) 
 			{
-				if      (isFlagged   (button)) setNewButtonImage(button) ;
-				
+				if      (isFlagged   (button)) setNewButtonImage(button) ;	
 				else if (isUnrevealed(button)) button.setIcon(flagScaled);
 			}
 		}
