@@ -64,19 +64,19 @@ public class BoardPanel extends    JPanel
 		
 		//------------------------------ INNER CLASS' METHODS ARE BELOW THIS LINE ---------------------------------------------------//
 		
-		public BoardPanel()
+		public BoardPanel(int numRows, int numCols, int numBombs)
 		{
-			initialize();	
+			initialize(numRows, numCols, numBombs);	
 			setLayout(new GridLayout(numRows, numCols));	
 			createBoard();	
 		}
 		
-		public void initialize()
+		public void initialize(int numRows, int numCols, int numBombs)
 		{
-			grid            = new Grid(16, 16, 40);		 //make a new grid for the buttons
-			numRows         = grid.getNumRows();
-			numCols         = grid.getNumColumns();
-			numBombs        = grid.getNumBombs();
+			grid            = new Grid(numRows, numCols, numBombs);
+			this.numRows    = grid.getNumRows   ();
+			this.numCols    = grid.getNumColumns();
+			this.numBombs   = grid.getNumBombs  ();
 			revealedCount   = 0;
 			gameJustStarted = true;
 		}
@@ -104,7 +104,7 @@ public class BoardPanel extends    JPanel
 					button.setFocusPainted (false);
 		            button.setBorder(BorderFactory.createEmptyBorder()); //gets rid of button padding
 		             
-					this.add(button);					 //add the button to the board panel
+					this.add(button);
 				}
 			}
 		}
@@ -153,9 +153,8 @@ public class BoardPanel extends    JPanel
 	            	if          (grid.isBombAtLocation  (row, col)) button.setIcon(bombScaled);//set its icon to bomb icon if its a bomb
 			        
 	            	else        revealImageBasedOnCount (count,     button); //we don't check for win condition in this case
-	            	
-	            }//inner for loop ends
-	        }//outer for loop ends
+	            }
+	        }
 	    }
 
 		private void revealButtonsAdjacentTo(int row, int col)
@@ -199,13 +198,8 @@ public class BoardPanel extends    JPanel
 		
 		public void resetGame() 
 		{ 
-			initialize();
-			
-			for(int row = 0; row < numRows; row++)
-			{
-				for(int col = 0; col < numCols; col++) setNewButtonImage(board[row][col]);
-			}
-			repaint();
+			Main.game.dispose();
+			Main.main(null);
 		}
 		
 		private void handleGameOver()
