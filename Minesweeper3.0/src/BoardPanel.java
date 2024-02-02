@@ -198,13 +198,13 @@ public class BoardPanel extends    JPanel
 		
 		public void resetGame() 
 		{ 
-			Main.game.dispose();
-			Main.main(null);
+			Game.frame.dispose();   //disposes the current game's frame
+			Game.main(null);		//calls the game's main method to make a new game frame
 		}
 		
 		private void handleGameOver()
 		{
-			revealGrid();													//reveal the rest of the grid            
+			revealGrid();           //reveal the rest of the grid            
     		displayGameOverPane();           
     		promptReplay();
 		}
