@@ -36,18 +36,18 @@ public class BoardPanel extends    JPanel
 		
 		private final int    IMAGE_SIZE = 28;
 
-		ImageIcon unpressed = new ImageIcon("Images/button_new.png" );
-		ImageIcon bomb      = new ImageIcon("Images/button_bomb.png");
-		ImageIcon flag      = new ImageIcon("Images/flag.png"       );
-		ImageIcon _0        = new ImageIcon("Images/button_0.png"   );
-		ImageIcon _1        = new ImageIcon("Images/button_1.png"   );
-		ImageIcon _2        = new ImageIcon("Images/button_2.png"   );
-		ImageIcon _3       	= new ImageIcon("Images/button_3.png"   );
-		ImageIcon _4        = new ImageIcon("Images/button_4.png"   );
-		ImageIcon _5        = new ImageIcon("Images/button_5.png"   );
-		ImageIcon _6        = new ImageIcon("Images/button_6.png"   );
-		ImageIcon _7        = new ImageIcon("Images/button_7.png"   );
-		ImageIcon _8        = new ImageIcon("Images/button_8.png"   );
+		ImageIcon unpressed = new ImageIcon(getClass().getClassLoader().getResource("button_new.png" ));
+		ImageIcon bomb      = new ImageIcon(getClass().getClassLoader().getResource("button_bomb.png"));
+		ImageIcon flag      = new ImageIcon(getClass().getClassLoader().getResource("flag.png"       ));
+		ImageIcon _0        = new ImageIcon(getClass().getClassLoader().getResource("button_0.png"   ));
+		ImageIcon _1        = new ImageIcon(getClass().getClassLoader().getResource("button_1.png"   ));
+		ImageIcon _2        = new ImageIcon(getClass().getClassLoader().getResource("button_2.png"   ));
+		ImageIcon _3       	= new ImageIcon(getClass().getClassLoader().getResource("button_3.png"   ));
+		ImageIcon _4        = new ImageIcon(getClass().getClassLoader().getResource("button_4.png"   ));
+		ImageIcon _5        = new ImageIcon(getClass().getClassLoader().getResource("button_5.png"   ));
+		ImageIcon _6        = new ImageIcon(getClass().getClassLoader().getResource("button_6.png"   ));
+		ImageIcon _7        = new ImageIcon(getClass().getClassLoader().getResource("button_7.png"   ));
+		ImageIcon _8        = new ImageIcon(getClass().getClassLoader().getResource("button_8.png"   ));
 		
 		ImageIcon unpressedScaled = new ImageIcon(unpressed.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
 		ImageIcon bombScaled      = new ImageIcon(     bomb.getImage().getScaledInstance(IMAGE_SIZE, IMAGE_SIZE, Image.SCALE_FAST));
@@ -247,7 +247,7 @@ public class BoardPanel extends    JPanel
 			
 			if (decision == JOptionPane.YES_OPTION) resetGame();
 			
-			else System.exit(1);
+			else System.exit(0);
 		}
 		
 		private void revealImageBasedOnCount(int count, JButton button)
