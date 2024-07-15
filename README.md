@@ -4,7 +4,7 @@ This is a simplified version of MineSweeper, made entirely in Java.
 Controls: Left-click to reveal cell, and right-click to flag them.
 
 <a href = "https://github.com/Omar-B-Maldonado/MineSweeper/releases/download/v1.0.0/MineSweeper.jar">
-<img src="https://custom-icon-badges.demolab.com/badge/-Download-F25278?style=for-the-badge&logo=download&logoColor=white"/>
+<img src="https://custom-icon-badges.demolab.com/badge/-Download-3590CF?style=for-the-badge&logo=download&logoColor=white"/>
 </a>
 
 > *Note: you may need the latest version of Java to run the game, which is currently Java 21*
